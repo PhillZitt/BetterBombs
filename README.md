@@ -2,8 +2,8 @@
 the utility of bombs by offering several configurable options to change bomb behavior.
 
 ## Contents
-* [Install] (#install)
-* [Configure] (#configure)
+* [Install](#install)
+* [Configure](#configure)
 
 ## Install
 1. [Install the latest version of SMAPI](https://smapi.io/).
