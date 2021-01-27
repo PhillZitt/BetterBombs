@@ -19,7 +19,9 @@ namespace BetterBombs
                                                                            //Barrels
                                                                            118, 120, 122, 124, 174,
                                                                            //Crates
-                                                                           119, 121, 123, 125, 175
+                                                                           119, 121, 123, 125, 175,
+                                                                           //Stone
+                                                                           2, 4, 75, 76, 77, 95, 290, 343, 450, 668, 670, 751, 760, 762, 764, 765, 816, 817, 818, 819, 843, 844, 845, 846, 847, 849, 850
                                                                          };
 
     // call this method from your Entry class
@@ -33,7 +35,7 @@ namespace BetterBombs
     //Pull in anything that I might change as ref, because the default code will run after this
     public static bool Explode_Prefix(GameLocation __instance, Vector2 tileLocation, ref int radius, Farmer who, ref bool damageFarmers, ref int damage_amount)
     {
-      //Monitor.Log("Beginning Explosion", LogLevel.Debug);
+      Monitor.Log("Beginning Explosion");
       try
       {
         //Do all of the changes early, if the custom method explodes, at least we did some of the changes
@@ -48,7 +50,7 @@ namespace BetterBombs
           damage_amount = Convert.ToInt32(radius * Game1.random.Next(radius * 6, (radius * 8) + 1) * Config.Damage);
         }
 
-        //Monitor.Log("Beginning Custom Explosion Logic", LogLevel.Debug);
+        Monitor.Log("Beginning Custom Explosion Logic");
         //Run only the custom explode logic
         ChangedExplode(__instance, tileLocation, radius, who);
       }
@@ -68,30 +70,24 @@ namespace BetterBombs
       //If anyone has any ideas on how to improve these two sections, I'd be happy to hear it
       if (Config.BreakClumps)
       {
-        //Monitor.Log("Breaking Clumps", LogLevel.Debug);
+        Monitor.Log("Breaking Clumps");
         //Make a list to hold the removed items
         var removed = new List<ResourceClump>(instance.resourceClumps.Count);
         foreach (var clump in instance.resourceClumps)
         {
           var loc = clump.tile.Value;
-          //Monitor.Log($"Checking clump: {clump.parentSheetIndex} at {loc.X}, {loc.Y}", LogLevel.Debug);
+          Monitor.Log($"Checking clump: {clump.parentSheetIndex} at {loc.X}, {loc.Y}");
 
           //check if the clump is inside of the bomb area
           if (clump.getBoundingBox(loc).Intersects(area))
           {
             var numChunks = ((clump.parentSheetIndex == 672) ? 15 : 10);
-            if (Game1.IsMultiplayer)
-            {
-              Game1.createMultipleObjectDebris(390, (int)tileLocation.X, (int)tileLocation.Y, numChunks, who.UniqueMultiplayerID);
-            }
-            else
-            {
-              Game1.createRadialDebris(Game1.currentLocation, 390, (int)tileLocation.X, (int)tileLocation.Y, numChunks, resource: false, -1, item: true);
-            }
+            var debris = 390;
             switch (clump.parentSheetIndex)
             {
               case ResourceClump.stumpIndex:
               case ResourceClump.hollowLogIndex:
+                debris = 709;
                 instance.playSound("stumpCrack");
                 break;
               case ResourceClump.boulderIndex:
@@ -102,6 +98,14 @@ namespace BetterBombs
               case ResourceClump.meteoriteIndex:
                 instance.playSound("boulderBreak");
                 break;
+            }
+            if (Game1.IsMultiplayer)
+            {
+              Game1.createMultipleObjectDebris(debris, (int)tileLocation.X, (int)tileLocation.Y, numChunks, who.UniqueMultiplayerID);
+            }
+            else
+            {
+              Game1.createRadialDebris(Game1.currentLocation, debris, (int)tileLocation.X, (int)tileLocation.Y, numChunks, resource: false, -1, item: true);
             }
             Game1.createRadialDebris(Game1.currentLocation, 32, (int)tileLocation.X, (int)tileLocation.Y, Game1.random.Next(6, 12), resource: false);
             //There was a concurrent modification type error if I removed the item during the loop, so store a copy to remove later
@@ -114,27 +118,38 @@ namespace BetterBombs
 
       if (Config.CollectMinerals)
       {
-        //Monitor.Log("Collecting Minerals", LogLevel.Debug);
+        Monitor.Log("Collecting Minerals");
         var removed = new List<Vector2>();
         foreach (var obj in instance.Objects.Pairs)
         {
-          if (MineralIgnoreList.Contains(obj.Value.ParentSheetIndex))
+          if (!obj.Value.CanBeGrabbed)
           {
-            //Monitor.Log($"Ignored object: {ObjectParentSheetIndexToName(obj.Value.parentSheetIndex)} at {obj.Key.X}, {obj.Key.Y}", LogLevel.Debug);
-            continue;
-          } else if (!obj.Value.CanBeGrabbed)
-          {
-            //Monitor.Log($"Object not grabbable: {ObjectParentSheetIndexToName(obj.Value.parentSheetIndex)} at {obj.Key.X}, {obj.Key.Y}", LogLevel.Debug);
+            //remove the trace log, I know that all objects I care about should have this set to True
             continue;
           }
-          //Monitor.Log($"Checking object: {ObjectParentSheetIndexToName(obj.Value.parentSheetIndex)} at {obj.Key.X}, {obj.Key.Y}", LogLevel.Debug);
+          else if (!obj.Value.IsSpawnedObject)
+          {
+            // A new property I found. I think everything that I want to pick up should have this set to True
+            Monitor.Log($"Object not a Spawned Object: {ObjectParentSheetIndexToName(obj.Value.parentSheetIndex)} at {obj.Key.X}, {obj.Key.Y}");
+            continue;
+          }
+          else if (MineralIgnoreList.Contains(obj.Value.ParentSheetIndex))
+          {
+            //Manual ignore list. Ideally, this will be removed.
+            Monitor.Log($"Ignored object: {ObjectParentSheetIndexToName(obj.Value.parentSheetIndex)} at {obj.Key.X}, {obj.Key.Y}");
+            continue;
+          }
+
+          Monitor.Log($"Checking object: {ObjectParentSheetIndexToName(obj.Value.parentSheetIndex)} at {obj.Key.X}, {obj.Key.Y}");
           if (obj.Value.getBoundingBox(obj.Key).Intersects(area))
           {
             try
             {
               Game1.createObjectDebris(obj.Value.ParentSheetIndex, Convert.ToInt32(obj.Key.X), Convert.ToInt32(obj.Key.Y), who.uniqueMultiplayerID, instance);
               removed.Add(obj.Key);
-            }catch(KeyNotFoundException ex){
+            }
+            catch (KeyNotFoundException ex)
+            {
               //do nothing, something went wrong translating an ground object to an inventory object
             }
           }
@@ -204,6 +219,9 @@ namespace BetterBombs
         case 76:
         case 77:
         case 95:
+        case 290:
+        case 343:
+        case 450:
         case 668:
         case 670:
         case 751:
