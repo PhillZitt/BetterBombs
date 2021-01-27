@@ -22,6 +22,7 @@ These are the available settings:
     <th>Option</th>
     <th>Effect</th>
     <th>Default</th>
+    <th>Notes</th>
   </tr>
   <tr>
     <td>
@@ -36,6 +37,8 @@ These are the available settings:
       <code>
         True
       </code>
+    </td>
+    <td>
     </td>
   </tr>
   <tr>
@@ -52,6 +55,8 @@ These are the available settings:
         True
       </code>
     </td>
+    <td>
+    </td>
   </tr>
   <tr>
     <td>
@@ -66,6 +71,8 @@ These are the available settings:
       <code>
         False
       </code>
+    </td>
+    <td>
     </td>
   </tr>
   <tr>
@@ -82,6 +89,9 @@ These are the available settings:
         1.0f
       </code>
     </td>
+    <td>
+      [Be careful of values above 3](https://github.com/PhillZitt/BetterBombs/issues/6).
+    </td>
   </tr>
   <tr>
     <td>
@@ -96,6 +106,8 @@ These are the available settings:
       <code>
         1.0f
       </code>
+    </td>
+    <td>
     </td>
   </tr>
 </table>
