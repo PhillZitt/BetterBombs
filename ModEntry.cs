@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using StardewModdingAPI;
 
 namespace BetterBombs
@@ -20,7 +20,8 @@ namespace BetterBombs
 
             //I considered trying to do this without harmony patching, but this results in a significantly reduced code footprint
             //If anyone has an idea of how to do this without harmony, shoot me a pull request
-			var harmony = HarmonyInstance.Create(this.ModManifest.UniqueID);
+			//var harmony = HarmonyInstance.Create(this.ModManifest.UniqueID);
+            var harmony = new Harmony(ModManifest.UniqueID);
 
 			harmony.Patch(
 				original: AccessTools.Method(typeof(StardewValley.GameLocation), nameof(StardewValley.GameLocation.explode)),
