@@ -41,6 +41,8 @@ namespace BetterBombs
                     gmcmApi?.AddBoolOption(ModManifest, () => config.BreakWoodClumps, (breakWoodClumps) => config.BreakWoodClumps = breakWoodClumps, () => "Break Wood Clumps", () => "Toggles whether explosions are able to break wooden Resource Clumps. This includes large stumps and hollow logs.");
                     gmcmApi?.AddBoolOption(ModManifest, () => config.BreakWeedsClumps, (breakWeedsClumps) => config.BreakWeedsClumps = breakWeedsClumps, () => "Break Weeds Clumps", () => "Toggles whether explosions are able to break weeds Resource Clumps. This includes the two large green rain grasses.");
                     gmcmApi?.AddBoolOption(ModManifest, () => config.BreakOtherClumps, (breakOtherClumps) => config.BreakOtherClumps = breakOtherClumps, () => "Break Other Clumps", () => "Toggles whether explosions are able to break miscellaneous Resource Clumps. There are none in vanilla Stardew Valley, only those added by mods.");
+                    gmcmApi?.AddBoolOption(ModManifest, () => config.CollectMinerals, (collectMinerals) => config.CollectMinerals = collectMinerals, () => "Collect Minerals", () => "Toggles whether grabbable minerals in the explosion radius are dropped instead of being destroyed.");
+                    gmcmApi?.AddBoolOption(ModManifest, () => config.CollectForage, (collectForage) => config.CollectForage = collectForage, () => "Collect Forage", () => "Toggles whether grabbable forage in the explosion radius is dropped instead of being destroyed. Respects foraging level and professions.");
 
                 }
             };
