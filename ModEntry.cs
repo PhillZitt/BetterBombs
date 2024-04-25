@@ -16,6 +16,7 @@ namespace BetterBombs
             var config = Helper.ReadConfig<ModConfig>();
 
             GameLocationPatches.Initialize(Monitor, config);
+            ObjectPatches.Initialize(Monitor, config);
 
             //I considered trying to do this without harmony patching, but this results in a significantly reduced code footprint
             //If anyone has an idea of how to do this without harmony, shoot me a pull request
@@ -24,7 +25,11 @@ namespace BetterBombs
 
             harmony.Patch(
                 original: AccessTools.Method(typeof(StardewValley.GameLocation), nameof(StardewValley.GameLocation.explode)),
-                prefix: new HarmonyMethod(typeof(GameLocationPatches), nameof(BetterBombs.GameLocationPatches.Explode_Prefix))
+                prefix: new HarmonyMethod(typeof(GameLocationPatches), nameof(GameLocationPatches.Explode_Prefix))
+            );
+            harmony.Patch(
+                original: AccessTools.Method(typeof(StardewValley.Object), nameof(StardewValley.Object.onExplosion)),
+                prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.onExplosion_Prefix))
             );
 
             helper.Events.GameLoop.GameLaunched += (sender, args) => { 
