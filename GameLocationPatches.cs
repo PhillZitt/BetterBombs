@@ -152,6 +152,44 @@ namespace BetterBombs
                         __instance.resourceClumps.Remove(clumpAndList.Key);
                     }
                 }
+                // collect minerals and forage
+                if (Config.CollectMinerals || Config.CollectForage)
+                {
+                    List<KeyValuePair<Vector2, StardewValley.Object>> objectsToRemove = new();
+                    foreach (KeyValuePair<Vector2,StardewValley.Object> objectOnGround in __instance.Objects.Pairs)
+                    {
+                        if (area.Contains(objectOnGround.Key) && objectOnGround.Value.CanBeGrabbed)
+                        {
+                            // minerals
+                            if (objectOnGround.Value.Type == "Minerals" && objectOnGround.Value.Category == StardewValley.Object.GemCategory && Config.CollectMinerals)
+                            {
+                                Game1.createObjectDebris(objectOnGround.Value.QualifiedItemId, (int)objectOnGround.Key.X, (int)objectOnGround.Key.Y, who.UniqueMultiplayerID, __instance);
+                                objectsToRemove.Add(objectOnGround);
+                            }
+                            // forage
+                            else if (objectOnGround.Value.Type == "Basic" && (objectOnGround.Value.Category == StardewValley.Object.VegetableCategory || objectOnGround.Value.Category == StardewValley.Object.FruitsCategory || objectOnGround.Value.Category == StardewValley.Object.GreensCategory) && Config.CollectForage)
+                            {
+                                Item droppedItem = ItemRegistry.Create(objectOnGround.Value.QualifiedItemId);
+                                // determine quality level
+                                if (Game1.player.professions.Contains(16))
+                                {
+                                    droppedItem.Quality = 4;
+                                }
+                                else if (Game1.random.NextDouble() < (double)(who.ForagingLevel / 30f))
+                                {
+                                    droppedItem.Quality = 2;
+                                }
+                                else if (Game1.random.NextDouble() < (double)(who.ForagingLevel / 15f))
+                                {
+                                    droppedItem.Quality = 1;
+                                }
+                                Game1.createItemDebris(droppedItem, objectOnGround.Key, -1, __instance);
+                                objectsToRemove.Add(objectOnGround);
+                            }
+                        }
+                    }
+                    objectsToRemove.ForEach((item) => __instance.Objects.Remove(item.Key));
+                }
             }
             catch (Exception ex)
             {
