@@ -35,6 +35,8 @@ namespace BetterBombs
         }
 
         //Pull in anything that I might change as ref, because the default code will run after this
+        [HarmonyPatch(typeof(GameLocation), nameof(GameLocation.explode))]
+        [HarmonyPrefix]
         public static bool Explode_Prefix(GameLocation __instance, Vector2 tileLocation, ref int radius, Farmer who, ref bool damageFarmers, ref int damage_amount)
         {
             Monitor.Log("Beginning Explosion");
@@ -52,13 +54,13 @@ namespace BetterBombs
                     damage_amount = Convert.ToInt32((radius * Game1.random.Next(radius * 6, (radius * 8) + 1)) * Config.Damage);
                 }
 
-                var area = new Rectangle(Convert.ToInt32(tileLocation.X - radius - 1f) * 64, Convert.ToInt32(tileLocation.Y - radius - 1f) * 64, (radius * 2 + 1) * 64, (radius * 2 + 1) * 64);
+                var tileArea = new Rectangle(Convert.ToInt32(tileLocation.X - radius - 1f), Convert.ToInt32(tileLocation.Y - radius - 1f), (radius * 2 + 1), (radius * 2 + 1));
                 if (Config.BreakClumps)
                 {
                     Dictionary<ResourceClump, List<Item>> objectsToDrop = new();
                     foreach (ResourceClump clump in __instance.resourceClumps)
                     {
-                        if (!area.Contains(clump.Tile)) continue;
+                        if (!tileArea.Contains(clump.Tile)) continue;
                         // vanilla resource clump
                         if (clump.textureName.Value == null || clump.textureName.Value == new16TileSheetName)
                         {
