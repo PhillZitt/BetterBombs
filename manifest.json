@@ -1,10 +1,16 @@
 ﻿{
     "Name": "BetterBombs",
     "Author": "Duno666",
-    "Version": "1.1.1-unofficial.1-justastranger",
+    "Version": "1.1.1-unofficial.2-justastranger",
     "Description": "Making explosions just a little better. Inspired by UsefulBombs",
     "UniqueID": "Duno666.BetterBombs",
     "EntryDll": "BetterBombs.dll",
-    "MinimumApiVersion": "3.0.0",
-    "UpdateKeys": [ "Nexus:7787" ]
+    "MinimumApiVersion": "4.0.0",
+    "UpdateKeys": [ "Nexus:7787" ],
+    "Dependencies": [
+        {
+            "UniqueID": "mistyspring.ItemExtensions",
+            "IsRequired": true
+        }
+    ]
 }
