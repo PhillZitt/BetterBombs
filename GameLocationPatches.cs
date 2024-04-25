@@ -184,7 +184,9 @@ namespace BetterBombs
                                 {
                                     droppedItem.Quality = 1;
                                 }
-                                Game1.createItemDebris(droppedItem, objectOnGround.Key, -1, __instance);
+                                // This should convert tile location to pixel location just like how vanilla scythe harvesting is done
+                                Vector2 objectPixelLocation = new(objectOnGround.Key.X * 64f + 32f, objectOnGround.Key.Y * 64f + 32f);
+                                Game1.createItemDebris(droppedItem, objectPixelLocation, -1, null, -1, false);
                                 objectsToRemove.Add(objectOnGround);
                             }
                         }
