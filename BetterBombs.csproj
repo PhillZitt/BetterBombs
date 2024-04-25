@@ -17,6 +17,7 @@
   <ItemGroup>
     <Reference Include="ItemExtensions">
       <HintPath>lib\ItemExtensions.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
