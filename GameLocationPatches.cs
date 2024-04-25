@@ -48,13 +48,13 @@ namespace BetterBombs
                 }
                 else
                 {
-                    damage_amount = Convert.ToInt32(radius * Game1.random.Next(radius * 6, (radius * 8) + 1) * Config.Damage);
+                    damage_amount = Convert.ToInt32((radius * Game1.random.Next(radius * 6, (radius * 8) + 1)) * Config.Damage);
                 }
 
                 var area = new Rectangle(Convert.ToInt32(tileLocation.X - radius - 1f) * 64, Convert.ToInt32(tileLocation.Y - radius - 1f) * 64, (radius * 2 + 1) * 64, (radius * 2 + 1) * 64);
                 if (Config.BreakClumps)
                 {
-                    Dictionary<ResourceClump, Item> objectsToDrop = new();
+                    Dictionary<ResourceClump, List<Item>> objectsToDrop = new();
                     foreach (ResourceClump clump in __instance.resourceClumps)
                     {
                         // vanilla resource clump
@@ -64,22 +64,36 @@ namespace BetterBombs
                             if (vanillaStoneClumps.Contains(clump.parentSheetIndex.Value) && Config.BreakStoneClumps)
                             {
                                 // vanilla boulders always drop stone, amounts taken from original author's version of this portion
-                                objectsToDrop.Add(clump, ItemRegistry.Create(StardewValley.Object.stoneQID, clump.parentSheetIndex.Value == ResourceClump.boulderIndex ? 15 : 10));
+                                if (!objectsToDrop.ContainsKey(clump)) objectsToDrop.Add(clump, new());
+                                objectsToDrop[clump].Add(ItemRegistry.Create(StardewValley.Object.stoneQID, clump.parentSheetIndex.Value == ResourceClump.boulderIndex ? 15 : 10));
+                            }
+                            // meteorite
+                            else if (clump.parentSheetIndex.Value == ResourceClump.meteoriteIndex && Config.BreakStoneClumps)
+                            {
+                                // According to the wiki: They drop 6 Iridium Ore, 6 Stone, and 2 Geodes, and have a 25% chance to drop a Prismatic Shard. 
+                                // if BetterMeteorites is installed, the simple act of removing the meteorite causes it to spawn extra resources so special compat is unnecessary
+                                if (!objectsToDrop.ContainsKey(clump)) objectsToDrop.Add(clump, new());
+                                objectsToDrop[clump].Add(ItemRegistry.Create(StardewValley.Object.iridiumQID, 6));
+                                objectsToDrop[clump].Add(ItemRegistry.Create(StardewValley.Object.stoneQID, 6));
+                                objectsToDrop[clump].Add(ItemRegistry.Create("(O)535", 2));
+                                if (Game1.random.NextBool(0.25f)) objectsToDrop[clump].Add(ItemRegistry.Create(StardewValley.Object.prismaticShardQID));
                             }
                             // wood
                             else if (vanillaWoodClumps.Contains(clump.parentSheetIndex.Value) && Config.BreakWoodClumps)
                             {
                                 // vanilla stumps and logs drop hardwood, (O)709
                                 // stumps drop a base of 2, hollow logs drop 8
-                                objectsToDrop.Add(clump, ItemRegistry.Create("(O)709", clump.parentSheetIndex.Value == ResourceClump.stumpIndex ? 2 : 8));
+                                if (!objectsToDrop.ContainsKey(clump)) objectsToDrop.Add(clump, new());
+                                objectsToDrop[clump].Add(ItemRegistry.Create("(O)709", clump.parentSheetIndex.Value == ResourceClump.stumpIndex ? 2 : 8));
                             }
                             // green rain weeds
                             else if (vanillaWeedsClumps.Contains(clump.parentSheetIndex.Value) && Config.BreakWeedsClumps)
                             {
                                 // green rain weeds drop 2-3 moss, 2-3 fiber, and a 5% chance of a mossy seed
-                                objectsToDrop.Add(clump, ItemRegistry.Create("(O)Moss", Game1.random.Choose(2, 3)));
-                                objectsToDrop.Add(clump, ItemRegistry.Create("(O)771", Game1.random.Choose(2, 3)));
-                                if (Game1.random.NextBool(0.05f)) objectsToDrop.Add(clump, ItemRegistry.Create("(O)MossySeed"));
+                                if (!objectsToDrop.ContainsKey(clump)) objectsToDrop.Add(clump, new());
+                                objectsToDrop[clump].Add(ItemRegistry.Create("(O)Moss", Game1.random.Choose(2, 3)));
+                                objectsToDrop[clump].Add(ItemRegistry.Create("(O)771", Game1.random.Choose(2, 3)));
+                                if (Game1.random.NextBool(0.05f)) objectsToDrop[clump].Add(ItemRegistry.Create("(O)MossySeed"));
                             }
                         }
                         else // likely a modded clump like from ItemExtensions
@@ -87,7 +101,7 @@ namespace BetterBombs
                             //so if it's from IE, it'll have that mod's modData
                             if (clump.modData != null && clump.modData.TryGetValue(itemExtensionsModDataKey, out string clumpId))
                             {
-                                // this is where the dependency on ItemExtensions come in
+                                // this is where the dependency on ItemExtensions comes in
                                 if (ItemExtensions.ModEntry.BigClumps.TryGetValue(clumpId, out ResourceData clumpResourceData))
                                 {
                                     // boomy no worky :'(
@@ -98,10 +112,12 @@ namespace BetterBombs
                                     else if (clumpResourceData.Type == CustomResourceType.Weeds && !Config.BreakWeedsClumps) continue;
                                     else if (clumpResourceData.Type == CustomResourceType.Other && !Config.BreakOtherClumps) continue;
                                     // check for drops
+                                    if (!objectsToDrop.ContainsKey(clump)) objectsToDrop.Add(clump, new());
+
                                     if (clumpResourceData.ItemDropped != null)
                                     {
                                         // we have something to spawn
-                                        objectsToDrop.Add(clump, ItemRegistry.Create(clumpResourceData.ItemDropped, Game1.random.Next(clumpResourceData.MinDrops, clumpResourceData.MaxDrops)));
+                                        objectsToDrop[clump].Add(ItemRegistry.Create(clumpResourceData.ItemDropped, Game1.random.Next(clumpResourceData.MinDrops, clumpResourceData.MaxDrops)));
                                     }
                                     if (clumpResourceData.ExtraItems != null && clumpResourceData.ExtraItems.Any())
                                     {
@@ -110,7 +126,7 @@ namespace BetterBombs
                                             // test the chance of the bonus item
                                             if (Game1.random.NextBool(item.Chance))
                                             {
-                                                objectsToDrop.Add(clump, ItemRegistry.Create(item.ItemId, Game1.random.Next(item.MinStack, item.MaxStack)));
+                                                objectsToDrop[clump].Add(ItemRegistry.Create(item.ItemId, Game1.random.Next(item.MinStack, item.MaxStack)));
                                             }
                                         }
                                     }
@@ -119,11 +135,21 @@ namespace BetterBombs
                         }
                     }
                     // spawn drops and remove clumps at the same time
-                    foreach (KeyValuePair<ResourceClump, Item> item in objectsToDrop)
+                    foreach (KeyValuePair<ResourceClump, List<Item>> clumpAndList in objectsToDrop)
                     {
-                        Game1.createMultipleObjectDebris(item.Value.QualifiedItemId, (int)item.Key.Tile.X, (int)item.Key.Tile.Y, item.Value.Stack);
-                        // remove any resource clumps that still exist at that location
-                        if (__instance.resourceClumps.Contains(item.Key)) __instance.resourceClumps.Remove(item.Key);
+                        // first, double-check for and iterate through all of the items to spawn
+                        if (clumpAndList.Value != null && clumpAndList.Value.Any())
+                        {
+                            foreach (Item item in clumpAndList.Value)
+                            {
+                                // We used the Item stack as a container for the two bits of info we actually needed, QualifiedItemId and Stack size, in order to spawn the Objects as dropped items
+                                Game1.createMultipleObjectDebris(item.QualifiedItemId, (int)clumpAndList.Key.Tile.X, (int)clumpAndList.Key.Tile.Y, item.Stack);
+                            }
+                        }
+                        // remove the associated resource clump
+                        // I *would* worry about the lack of sanity check if using the clump as
+                        // the Dictionary key didn't guarantee that they'd be unique
+                        __instance.resourceClumps.Remove(clumpAndList.Key);
                     }
                 }
             }
