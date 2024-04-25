@@ -4,7 +4,7 @@
     <OutputType>Library</OutputType>
     <EnableHarmony>true</EnableHarmony>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <AssemblyTitle>BetterBombs</AssemblyTitle>
     <Product>BetterBombs</Product>
     <Copyright>Copyright ©  2021</Copyright>
