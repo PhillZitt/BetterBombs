@@ -1,4 +1,5 @@
-﻿using ItemExtensions.Models;
+﻿using HarmonyLib;
+using ItemExtensions.Models;
 using ItemExtensions.Models.Enums;
 using ItemExtensions.Models.Items;
 using Microsoft.Xna.Framework;
@@ -34,6 +35,7 @@ namespace BetterBombs
         }
 
         //Pull in anything that I might change as ref, because the default code will run after this
+        [HarmonyPriority(Priority.High)]
         public static bool Explode_Prefix(GameLocation __instance, Vector2 tileLocation, ref int radius, Farmer who, ref bool damageFarmers, ref int damage_amount)
         {
             Monitor.Log("Beginning Explosion");
