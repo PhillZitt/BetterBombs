@@ -57,6 +57,7 @@ namespace BetterBombs
                     Dictionary<ResourceClump, List<Item>> objectsToDrop = new();
                     foreach (ResourceClump clump in __instance.resourceClumps)
                     {
+                        if (!area.Contains(clump.Tile)) continue;
                         // vanilla resource clump
                         if (clump.textureName.Value == null || clump.textureName.Value == new16TileSheetName)
                         {
