@@ -27,7 +27,7 @@ These are the available settings:
   <tr>
     <td>
       <code>
-        BreakClumps
+BreakClumps
       </code>
     </td>
     <td>
@@ -35,7 +35,7 @@ These are the available settings:
     </td>
     <td>
       <code>
-        False
+False
       </code>
     </td>
     <td>
@@ -45,7 +45,7 @@ These are the available settings:
   <tr>
     <td>
       <code>
-        BreakStoneClumps
+BreakStoneClumps
       </code>
     </td>
     <td>
@@ -53,7 +53,7 @@ These are the available settings:
     </td>
     <td>
       <code>
-        False
+False
       </code>
     </td>
     <td>
@@ -63,7 +63,7 @@ These are the available settings:
   <tr>
     <td>
       <code>
-        BreakWoodClumps
+BreakWoodClumps
       </code>
     </td>
     <td>
@@ -71,7 +71,7 @@ These are the available settings:
     </td>
     <td>
       <code>
-        False
+False
       </code>
     </td>
     <td>
@@ -81,7 +81,7 @@ These are the available settings:
   <tr>
     <td>
       <code>
-        BreakWeedsClumps
+BreakWeedsClumps
       </code>
     </td>
     <td>
@@ -89,7 +89,7 @@ These are the available settings:
     </td>
     <td>
       <code>
-        False
+False
       </code>
     </td>
     <td>
@@ -98,7 +98,7 @@ These are the available settings:
   <tr>
     <td>
       <code>
-        BreakOtherClumps
+BreakOtherClumps
       </code>
     </td>
     <td>
@@ -106,7 +106,7 @@ These are the available settings:
     </td>
     <td>
       <code>
-        False
+False
       </code>
     </td>
     <td>
@@ -116,7 +116,7 @@ These are the available settings:
   <tr>
     <td>
       <code>
-        CollectMinerals
+CollectMinerals
       </code>
     </td>
     <td>
@@ -124,7 +124,7 @@ These are the available settings:
     </td>
     <td>
       <code>
-        False
+False
       </code>
     </td>
     <td>
@@ -133,7 +133,7 @@ These are the available settings:
   <tr>
     <td>
       <code>
-        CollectForage
+CollectForage
       </code>
     </td>
     <td>
@@ -141,7 +141,7 @@ These are the available settings:
     </td>
     <td>
       <code>
-        False
+False
       </code>
     </td>
     <td>
@@ -151,7 +151,7 @@ These are the available settings:
   <tr>
     <td>
       <code>
-        CollectFish
+CollectFish
       </code>
     </td>
     <td>
@@ -159,7 +159,7 @@ These are the available settings:
     </td>
     <td>
       <code>
-        True
+True
       </code>
     </td>
     <td>
@@ -169,7 +169,7 @@ These are the available settings:
   <tr>
     <td>
       <code>
-        DamageFarmers
+DamageFarmers
       </code>
     </td>
     <td>
@@ -177,7 +177,7 @@ These are the available settings:
     </td>
     <td>
       <code>
-        False
+False
       </code>
     </td>
     <td>
@@ -186,7 +186,7 @@ These are the available settings:
   <tr>
     <td>
       <code>
-        Radius
+Radius
       </code>
     </td>
     <td>
@@ -194,7 +194,7 @@ These are the available settings:
     </td>
     <td>
       <code>
-        1.0f
+1.0f
       </code>
     </td>
     <td>
@@ -204,7 +204,7 @@ These are the available settings:
   <tr>
     <td>
       <code>
-        Damage
+Damage
       </code>
     </td>
     <td>
@@ -212,7 +212,7 @@ These are the available settings:
     </td>
     <td>
       <code>
-        1.0f
+1.0f
       </code>
     </td>
     <td>
