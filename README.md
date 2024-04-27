@@ -26,17 +26,13 @@ These are the available settings:
   </tr>
   <tr>
     <td>
-      <code>
-BreakClumps
-      </code>
+      <code>BreakClumps</code>
     </td>
     <td>
       Master switch for breaking resource clumps - Boulders, Stumps, Logs, etc.
     </td>
     <td>
-      <code>
-False
-      </code>
+      <code>False</code>
     </td>
     <td>
       Needs to be enabled in addition to configs for the specific clump types to break.
@@ -44,17 +40,13 @@ False
   </tr>
   <tr>
     <td>
-      <code>
-BreakStoneClumps
-      </code>
+      <code>BreakStoneClumps</code>
     </td>
     <td>
       Bombs will break stone resource clumps - Boulders, meteorites, etc.
     </td>
     <td>
-      <code>
-False
-      </code>
+      <code>False</code>
     </td>
     <td>
       Requires BreakClumps to be enabled in order to work.
@@ -62,17 +54,13 @@ False
   </tr>
   <tr>
     <td>
-      <code>
-BreakWoodClumps
-      </code>
+      <code>BreakWoodClumps</code>
     </td>
     <td>
       Bombs will break wood resource clumps - Stumps, logs, etc.
     </td>
     <td>
-      <code>
-False
-      </code>
+      <code>False</code>
     </td>
     <td>
       Requires BreakClumps to be enabled in order to work.
@@ -80,34 +68,26 @@ False
   </tr>
   <tr>
     <td>
-      <code>
-BreakWeedsClumps
-      </code>
+      <code>BreakWeedsClumps</code>
     </td>
     <td>
       Bombs will break weeds resource clumps that spawn during green rain.
     </td>
     <td>
-      <code>
-False
-      </code>
+      <code>False</code>
     </td>
     <td>
     </td>
   </tr>
   <tr>
     <td>
-      <code>
-BreakOtherClumps
-      </code>
+      <code>BreakOtherClumps</code>
     </td>
     <td>
       Bombs will break miscellaneous resource clumps that are added by mods.
     </td>
     <td>
-      <code>
-False
-      </code>
+      <code>False</code>
     </td>
     <td>
       Requires BreakClumps to be enabled in order to work. There are no vanilla clumps in this category.
@@ -115,34 +95,26 @@ False
   </tr>
   <tr>
     <td>
-      <code>
-CollectMinerals
-      </code>
+      <code>CollectMinerals</code>
     </td>
     <td>
       Bombs will collect grabbable minerals on the ground instead of destroying them.
     </td>
     <td>
-      <code>
-False
-      </code>
+      <code>False</code>
     </td>
     <td>
     </td>
   </tr>
   <tr>
     <td>
-      <code>
-CollectForage
-      </code>
+      <code>CollectForage</code>
     </td>
     <td>
       Bombs will collect grabbable forage  on the ground instead of destroying them.
     </td>
     <td>
-      <code>
-False
-      </code>
+      <code>False</code>
     </td>
     <td>
       Forage quality respects foraging level and professions.
@@ -150,17 +122,13 @@ False
   </tr>
   <tr>
     <td>
-      <code>
-CollectFish
-      </code>
+      <code>CollectFish</code>
     </td>
     <td>
       Bombs will collect grabbable fish and shells on the ground instead of destroying them.
     </td>
     <td>
-      <code>
-True
-      </code>
+      <code>True</code>
     </td>
     <td>
       Forage quality respects foraging level and professions.
@@ -168,34 +136,26 @@ True
   </tr>
   <tr>
     <td>
-      <code>
-DamageFarmers
-      </code>
+      <code>DamageFarmers</code>
     </td>
     <td>
       Bombs will deal damage to players.
     </td>
     <td>
-      <code>
-False
-      </code>
+      <code>False</code>
     </td>
     <td>
     </td>
   </tr>
   <tr>
     <td>
-      <code>
-Radius
-      </code>
+      <code>Radius</code>
     </td>
     <td>
       A multiplier to the default radius of bombs.
     </td>
     <td>
-      <code>
-1.0f
-      </code>
+      <code>1.0f</code>
     </td>
     <td>
       [Be careful of values above 3](https://github.com/PhillZitt/BetterBombs/issues/6).
@@ -203,17 +163,13 @@ Radius
   </tr>
   <tr>
     <td>
-      <code>
-Damage
-      </code>
+      <code>Damage</code>
     </td>
     <td>
       A multiplier to the default damage of bombs.
     </td>
     <td>
-      <code>
-1.0f
-      </code>
+      <code>1.0f</code>
     </td>
     <td>
     </td>
