@@ -12,5 +12,6 @@
         public bool BreakOtherClumps { get; set; } = false;
         public bool CollectMinerals { get; set; } = false;
         public bool CollectForage { get; set; } = false;
+        public bool CollectFish { get; set; } = false;
     }
 }

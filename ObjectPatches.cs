@@ -11,7 +11,8 @@ namespace BetterBombs
         private static IMonitor Monitor;
         private static ModConfig Config;
         private static readonly List<int> forageCategories = new() { Object.GreensCategory, Object.VegetableCategory, Object.FruitsCategory, Object.flowersCategory };
-        
+        private static readonly List<int> fishForageCategories = new() { Object.FishCategory, Object.sellAtFishShopCategory };
+
         // call this method from your Entry class
         public static void Initialize(IMonitor monitor, ModConfig config)
         {
@@ -32,7 +33,8 @@ namespace BetterBombs
                     Game1.createObjectDebris(__instance.QualifiedItemId, (int)__instance.TileLocation.X, (int)__instance.TileLocation.Y, who.UniqueMultiplayerID, __instance.Location);
                     __instance.performRemoveAction();
                 }
-                else if (Config.CollectForage && forageCategories.Contains(__instance.Category))
+                else if ((Config.CollectForage && forageCategories.Contains(__instance.Category))
+                    || (Config.CollectFish && fishForageCategories.Contains(__instance.Category)))
                 {
                     Item droppedItem = ItemRegistry.Create(__instance.QualifiedItemId);
                     // determine quality level

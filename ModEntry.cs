@@ -48,7 +48,7 @@ namespace BetterBombs
                     gmcmApi?.AddBoolOption(ModManifest, () => config.BreakOtherClumps, (breakOtherClumps) => config.BreakOtherClumps = breakOtherClumps, () => "Break Other Clumps", () => "Toggles whether explosions are able to break miscellaneous Resource Clumps. There are none in vanilla Stardew Valley, only those added by mods.");
                     gmcmApi?.AddBoolOption(ModManifest, () => config.CollectMinerals, (collectMinerals) => config.CollectMinerals = collectMinerals, () => "Collect Minerals", () => "Toggles whether grabbable minerals in the explosion radius are dropped instead of being destroyed.");
                     gmcmApi?.AddBoolOption(ModManifest, () => config.CollectForage, (collectForage) => config.CollectForage = collectForage, () => "Collect Forage", () => "Toggles whether grabbable forage in the explosion radius is dropped instead of being destroyed. Respects foraging level and professions.");
-
+                    gmcmApi?.AddBoolOption(ModManifest, () => config.CollectFish, (collectFish) => config.CollectFish = collectFish, () => "Collect Fish Forage", () => "Toggles whether grabbable fish and shells in the explosion radius are dropped instead of being destroyed. Respects foraging level and professions.");
                 }
             };
         }
