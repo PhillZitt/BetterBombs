@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.TerrainFeatures;
+using System;
 using System.Collections.Generic;
 
 namespace BetterBombs
 {
+
     public interface IItemExtensionsApi
     {
         /// <summary>
@@ -84,5 +86,14 @@ namespace BetterBombs
         /// <param name="parseConditions">Whether to pase GSQs before adding to list.</param>
         /// <returns>All possible drops, with %.</returns>
         Dictionary<string, (double, int)> GetObjectDrops(StardewValley.Object node, bool parseConditions = false);
+
+        /// <summary>
+        /// Checks for other resource information.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        bool GetExtraResourceData(string id, bool isClump, out bool bombImmunity, out Enum resourceType);
+
+        bool GetAllResourceData(string id, bool isClump, out object data);
     }
 }

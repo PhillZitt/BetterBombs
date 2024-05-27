@@ -38,6 +38,8 @@ namespace BetterBombs
 
             Helper.Events.GameLoop.GameLaunched += (sender, args) =>
             {
+                // if IE isn't loaded there's no point in trying to access their API
+                if (!helper.ModRegistry.IsLoaded("mistyspring.ItemExtensions")) return;
                 itemExtensionsApi = helper.ModRegistry.GetApi<IItemExtensionsApi>("mistyspring.ItemExtensions");
             };
         }
@@ -113,33 +115,45 @@ namespace BetterBombs
                             //so if it's from IE, it'll have that mod's modData
                             if (clump.modData != null && clump.modData.TryGetValue(itemExtensionsModDataKey, out string clumpId))
                             {
-                                // something's hinky if we have ResourceClumps with their ModData but no API access but we'll play it safe
+                                // Something's hinky if we have ResourceClumps with IE's ModData but no API access so we'll play it safe and skip over it
+                                // Should cover cases where someone removes ItemExtensions after clumps spawn without removing them somehow
+                                // Otherwise just checking for the presence of the relevant ModData should be enough
                                 if (itemExtensionsApi == null) continue;
 
-                                // this is where the dependency on ItemExtensions comes in
-                                if (ItemExtensions.ModEntry.BigClumps.TryGetValue(clumpId, out ResourceData clumpResourceData))
+                                // Grab the info we need to check if the clump is eligible for blowing up
+                                // If the clump ID isn't valid it'll skip trying to parse it further
+                                // Should probably log invalid custom clump IDs if they're encountered but that's the content pack author's ballpark
+                                if (itemExtensionsApi.GetExtraResourceData(clumpId, true, out bool bombImmunity, out Enum resourceType))
                                 {
                                     // boomy no worky :'(
-                                    if (clumpResourceData.ImmuneToBombs) continue;
+                                    if (bombImmunity) continue;
                                     // skip any clumps that aren't configured to be broken
-                                    bool canBreak = clumpResourceData.Type switch
+                                    bool canBreak = resourceType.ToString() switch
                                     {
-                                        CustomResourceType.Stone => Config.BreakStoneClumps,
-                                        CustomResourceType.Wood => Config.BreakWoodClumps,
-                                        CustomResourceType.Weeds => Config.BreakWeedsClumps,
-                                        CustomResourceType.Other => Config.BreakOtherClumps,
+                                        "Stone" => Config.BreakStoneClumps,
+                                        "Wood" => Config.BreakWoodClumps,
+                                        "Weeds" => Config.BreakWeedsClumps,
+                                        "Other" => Config.BreakOtherClumps,
                                         _ => false
                                     };
                                     if (!canBreak) continue;
 
                                     // retrieve and parse drops
-                                    if (!objectsToDrop.ContainsKey(clump)) objectsToDrop.Add(clump, new());
                                     // Dictionary<string qualifiedItemId, (double chance, int prerolledCount)>
-                                    var drops = itemExtensionsApi.GetClumpDrops(clump);
+                                    var drops = itemExtensionsApi.GetClumpDrops(clump, true);
+
+                                    // Get ready to collect the drops, intializing an empty list so the clump gets destroyed
+                                    if (!objectsToDrop.ContainsKey(clump)) objectsToDrop.Add(clump, new());
+
+                                    // If the clump doesn't drop anything, don't try to iterate through an empty dictionary
+                                    if (!drops.Any()) continue;
+
                                     foreach (var item in drops)
                                     {
+                                        // Item1 is the chance for dropping
                                         if (item.Value.Item1 == 1 || Game1.random.NextBool(item.Value.Item1))
                                         {
+                                            // made even simpler thanks to the drop count being rolled for us
                                             objectsToDrop[clump].Add(ItemRegistry.Create(item.Key, item.Value.Item2));
                                         }
                                     }
@@ -160,8 +174,8 @@ namespace BetterBombs
                             }
                         }
                         // remove the associated resource clump
-                        // I *would* worry about the lack of sanity check if using the clump as
-                        // the Dictionary key didn't guarantee that they'd be unique
+                        // I *would* worry about the lack of sanity check if using the clump as the Dictionary key didn't guarantee that they'd be unique
+                        // Perform the removal outside the check above so that clumps without drops get destroyed too
                         __instance.resourceClumps.Remove(clumpAndList.Key);
                     }
                 }
