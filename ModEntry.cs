@@ -15,7 +15,7 @@ namespace BetterBombs
         {
             var config = Helper.ReadConfig<ModConfig>();
 
-            GameLocationPatches.Initialize(Monitor, config);
+            GameLocationPatches.Initialize(Monitor, config, helper);
             ObjectPatches.Initialize(Monitor, config);
 
             //I considered trying to do this without harmony patching, but this results in a significantly reduced code footprint

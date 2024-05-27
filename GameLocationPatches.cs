@@ -17,7 +17,9 @@ namespace BetterBombs
     {
         private static IMonitor Monitor;
         private static ModConfig Config;
+        private static IModHelper Helper;
         private const string itemExtensionsModDataKey = "mistyspring.ItemExtensions/CustomClumpId";
+        private static IItemExtensionsApi itemExtensionsApi;
 
         private const string new16TileSheetName = "TileSheets\\Objects_2";
         private const int new16Boulder = 148;
@@ -28,10 +30,16 @@ namespace BetterBombs
         private readonly static List<int> vanillaWeedsClumps = new() { greenRainWeedClump1, greenRainWeedClump2 };
 
         // call this method from your Entry class
-        public static void Initialize(IMonitor monitor, ModConfig config)
+        public static void Initialize(IMonitor monitor, ModConfig config, IModHelper helper)
         {
             Monitor = monitor;
             Config = config;
+            Helper = helper;
+
+            Helper.Events.GameLoop.GameLaunched += (sender, args) =>
+            {
+                itemExtensionsApi = helper.ModRegistry.GetApi<IItemExtensionsApi>("mistyspring.ItemExtensions");
+            };
         }
 
         //Pull in anything that I might change as ref, because the default code will run after this
@@ -105,33 +113,34 @@ namespace BetterBombs
                             //so if it's from IE, it'll have that mod's modData
                             if (clump.modData != null && clump.modData.TryGetValue(itemExtensionsModDataKey, out string clumpId))
                             {
+                                // something's hinky if we have ResourceClumps with their ModData but no API access but we'll play it safe
+                                if (itemExtensionsApi == null) continue;
+
                                 // this is where the dependency on ItemExtensions comes in
                                 if (ItemExtensions.ModEntry.BigClumps.TryGetValue(clumpId, out ResourceData clumpResourceData))
                                 {
                                     // boomy no worky :'(
                                     if (clumpResourceData.ImmuneToBombs) continue;
                                     // skip any clumps that aren't configured to be broken
-                                    if (clumpResourceData.Type == CustomResourceType.Stone && !Config.BreakStoneClumps) continue;
-                                    else if (clumpResourceData.Type == CustomResourceType.Wood && !Config.BreakWoodClumps) continue;
-                                    else if (clumpResourceData.Type == CustomResourceType.Weeds && !Config.BreakWeedsClumps) continue;
-                                    else if (clumpResourceData.Type == CustomResourceType.Other && !Config.BreakOtherClumps) continue;
-                                    // check for drops
-                                    if (!objectsToDrop.ContainsKey(clump)) objectsToDrop.Add(clump, new());
+                                    bool canBreak = clumpResourceData.Type switch
+                                    {
+                                        CustomResourceType.Stone => Config.BreakStoneClumps,
+                                        CustomResourceType.Wood => Config.BreakWoodClumps,
+                                        CustomResourceType.Weeds => Config.BreakWeedsClumps,
+                                        CustomResourceType.Other => Config.BreakOtherClumps,
+                                        _ => false
+                                    };
+                                    if (!canBreak) continue;
 
-                                    if (clumpResourceData.ItemDropped != null)
+                                    // retrieve and parse drops
+                                    if (!objectsToDrop.ContainsKey(clump)) objectsToDrop.Add(clump, new());
+                                    // Dictionary<string qualifiedItemId, (double chance, int prerolledCount)>
+                                    var drops = itemExtensionsApi.GetClumpDrops(clump);
+                                    foreach (var item in drops)
                                     {
-                                        // we have something to spawn
-                                        objectsToDrop[clump].Add(ItemRegistry.Create(clumpResourceData.ItemDropped, Game1.random.Next(clumpResourceData.MinDrops, clumpResourceData.MaxDrops)));
-                                    }
-                                    if (clumpResourceData.ExtraItems != null && clumpResourceData.ExtraItems.Any())
-                                    {
-                                        foreach (ExtraSpawn item in clumpResourceData.ExtraItems)
+                                        if (item.Value.Item1 == 1 || Game1.random.NextBool(item.Value.Item1))
                                         {
-                                            // test the chance of the bonus item
-                                            if (Game1.random.NextBool(item.Chance))
-                                            {
-                                                objectsToDrop[clump].Add(ItemRegistry.Create(item.ItemId, Game1.random.Next(item.MinStack, item.MaxStack)));
-                                            }
+                                            objectsToDrop[clump].Add(ItemRegistry.Create(item.Key, item.Value.Item2));
                                         }
                                     }
                                 }
