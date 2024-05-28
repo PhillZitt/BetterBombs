@@ -120,12 +120,14 @@ namespace BetterBombs
                                 // Grab the info we need to check if the clump is eligible for blowing up
                                 // If the clump ID isn't valid it'll skip trying to parse it further
                                 // Should probably log invalid custom clump IDs if they're encountered but that's the content pack author's ballpark
-                                if (itemExtensionsApi.GetExtraResourceData(clumpId, true, out bool bombImmunity, out Enum resourceType))
+                                // There's a legitimate reason to be sketched out by the use of dynamic but it's the only way to properly utilize an Object without upcasting to a type we can't reference without an assembly reference
+                                if (itemExtensionsApi.GetResourceData(clumpId, true, out dynamic clumpData))
                                 {
+                                    // If there are any issues with a dynamic ResourceData cast as an Object it'll be here
                                     // boomy no worky :'(
-                                    if (bombImmunity) continue;
+                                    if (clumpData.ImmuneToBombs) continue;
                                     // skip any clumps that aren't configured to be broken
-                                    bool canBreak = resourceType.ToString() switch
+                                    bool canBreak = clumpData.Type.ToString() switch
                                     {
                                         "Stone" => Config.BreakStoneClumps,
                                         "Wood" => Config.BreakWoodClumps,

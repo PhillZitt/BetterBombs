@@ -87,13 +87,6 @@ namespace BetterBombs
         /// <returns>All possible drops, with %.</returns>
         Dictionary<string, (double, int)> GetObjectDrops(StardewValley.Object node, bool parseConditions = false);
 
-        /// <summary>
-        /// Checks for other resource information.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        bool GetExtraResourceData(string id, bool isClump, out bool bombImmunity, out Enum resourceType);
-
-        bool GetAllResourceData(string id, bool isClump, out object data);
+        bool GetResourceData(string id, bool isClump, out object data);
     }
 }
