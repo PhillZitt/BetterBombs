@@ -117,7 +117,7 @@ These are the available settings:
       <code>False</code>
     </td>
     <td>
-      Forage quality respects foraging level and professions.
+      Forage quality respects foraging level and professions by default.
     </td>
   </tr>
   <tr>
@@ -128,10 +128,38 @@ These are the available settings:
       Bombs will collect grabbable fish and shells on the ground instead of destroying them.
     </td>
     <td>
+      <code>False</code>
+    </td>
+    <td>
+      Forage quality respects foraging level and professions by default.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>CollectedQuality</code>
+    </td>
+    <td>
+      Collected forage and fish will have a quality level appropriate to your foraging level and professions.
+    </td>
+    <td>
       <code>True</code>
     </td>
     <td>
-      Forage quality respects foraging level and professions.
+      If disabled, items will be collected at base quality.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>CollectedDegrade</code>
+    </td>
+    <td>
+      Reduces the quality level of collected forage by one.
+    </td>
+    <td>
+      <code>False</code>
+    </td>
+    <td>
+      Iridium -> Gold, Gold -> Silver, Silver -> Regular. No effect if CollectedQuality is disabled.
     </td>
   </tr>
   <tr>
