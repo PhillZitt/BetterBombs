@@ -49,6 +49,8 @@ namespace BetterBombs
                     gmcmApi?.AddBoolOption(ModManifest, () => config.CollectMinerals, (collectMinerals) => config.CollectMinerals = collectMinerals, () => "Collect Minerals", () => "Toggles whether grabbable minerals in the explosion radius are dropped instead of being destroyed.");
                     gmcmApi?.AddBoolOption(ModManifest, () => config.CollectForage, (collectForage) => config.CollectForage = collectForage, () => "Collect Forage", () => "Toggles whether grabbable forage in the explosion radius is dropped instead of being destroyed. Respects foraging level and professions.");
                     gmcmApi?.AddBoolOption(ModManifest, () => config.CollectFish, (collectFish) => config.CollectFish = collectFish, () => "Collect Fish Forage", () => "Toggles whether grabbable fish and shells in the explosion radius are dropped instead of being destroyed. Respects foraging level and professions.");
+                    gmcmApi?.AddBoolOption(ModManifest, () => config.CollectedQuality, (collectedQuality) => config.CollectedQuality = collectedQuality, () => "Collected Items Have Quality", () => "Toggles whether collecting forage or fish with bombs will give it a quality level. Enabled by default.");
+                    gmcmApi?.AddBoolOption(ModManifest, () => config.CollectedDegrade, (collectedDegrade) => config.CollectedDegrade = collectedDegrade, () => "Degrade Collected Items", () => "Toggles whether quality levels are reduced by one when collecting items via explosion. Disabled by default.");
                 }
             };
         }

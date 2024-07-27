@@ -38,17 +38,20 @@ namespace BetterBombs
                 {
                     Item droppedItem = ItemRegistry.Create(__instance.QualifiedItemId);
                     // determine quality level
-                    if (Game1.player.professions.Contains(16))
+                    if (Config.CollectedQuality)
                     {
-                        droppedItem.Quality = 4;
-                    }
-                    else if (Game1.random.NextDouble() < (double)(who.ForagingLevel / 30f))
-                    {
-                        droppedItem.Quality = 2;
-                    }
-                    else if (Game1.random.NextDouble() < (double)(who.ForagingLevel / 15f))
-                    {
-                        droppedItem.Quality = 1;
+                        if (Game1.player.professions.Contains(16))
+                        {
+                            droppedItem.Quality = Config.CollectedDegrade ? 2 : 4;
+                        }
+                        else if (Game1.random.NextDouble() < (double)(who.ForagingLevel / 30f))
+                        {
+                            droppedItem.Quality = Config.CollectedDegrade ? 1 : 2;
+                        }
+                        else if (Game1.random.NextDouble() < (double)(who.ForagingLevel / 15f) && !Config.CollectedDegrade)
+                        {
+                            droppedItem.Quality = 1;
+                        }
                     }
                     // This should convert tile location to pixel location just like how vanilla scythe harvesting is done
                     Vector2 objectPixelLocation = new(__instance.TileLocation.X * 64f + 32f, __instance.TileLocation.Y * 64f + 32f);

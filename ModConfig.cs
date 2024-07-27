@@ -13,5 +13,8 @@
         public bool CollectMinerals { get; set; } = false;
         public bool CollectForage { get; set; } = false;
         public bool CollectFish { get; set; } = false;
+        public bool CollectedDegrade { get; set; } = false;
+        public bool CollectedQuality { get; set; } = true;
+
     }
 }
