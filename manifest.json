@@ -1,11 +1,11 @@
 ﻿{
     "Name": "BetterBombs",
     "Author": "Duno666, justastranger",
-    "Version": "1.1.3",
+    "Version": "1.1.4",
     "Description": "Making explosions just a little better. Inspired by UsefulBombs",
     "UniqueID": "Duno666.BetterBombs",
     "EntryDll": "BetterBombs.dll",
-    "MinimumApiVersion": "4.0.0",
+    "MinimumApiVersion": "4.1.0",
     "UpdateKeys": [ "Nexus:7787" ],
     "Dependencies": [
         {

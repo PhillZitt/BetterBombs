@@ -40,7 +40,7 @@ namespace BetterBombs
                     // determine quality level
                     if (Config.CollectedQuality)
                     {
-                        if (Game1.player.professions.Contains(16))
+                        if (who.professions.Contains(16))
                         {
                             droppedItem.Quality = Config.CollectedDegrade ? 2 : 4;
                         }

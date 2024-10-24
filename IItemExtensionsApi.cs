@@ -22,23 +22,18 @@ namespace BetterBombs
         /// <param name="id">Qualified item ID</param>
         /// <param name="health">MinutesUntilReady value</param>
         /// <param name="itemDropped">Item dropped by ore</param>
-        /// <returns>Whether the object has ore data.</returns>
+        /// <returns>Whether the object has resource data.</returns>
         bool IsResource(string id, out int? health, out string itemDropped);
 
         /// <summary>
-        /// Checks mod's menu behaviors. If a target isn't provided, it'll search whether any exist.
-        /// </summary>
-        /// <param name="qualifiedItemId">Qualified item ID.</param>
-        /// <param name="target">Item to search behavior for. (Qualified item ID)</param>
-        /// <returns>Whether this item has menu behavior for target.</returns>
-        bool HasBehavior(string qualifiedItemId, string target);
-
-        /// <summary>
-        /// Checks for a qualified id in modded clump data.
+        /// Checks for a qualified id in modded clump data (vanilla not included).
         /// </summary>
         /// <param name="qualifiedItemId">Qualified item ID.</param>
         /// <returns>Whether this id is a clump's.</returns>
         bool IsClump(string qualifiedItemId);
+
+        //adding empty in the meantime
+        bool HasBehavior(string qualifiedItemId, string target);
 
         /// <summary>
         /// Tries to spawn a clump.
@@ -82,11 +77,12 @@ namespace BetterBombs
         /// <summary>
         /// Gets drops for a node.
         /// </summary>
-        /// <param name="clump">The node instance.</param>
+        /// <param name="node">The node instance.</param>
         /// <param name="parseConditions">Whether to pase GSQs before adding to list.</param>
         /// <returns>All possible drops, with %.</returns>
         Dictionary<string, (double, int)> GetObjectDrops(StardewValley.Object node, bool parseConditions = false);
 
         bool GetResourceData(string id, bool isClump, out object data);
+        bool GetBreakingTool(string id, bool isClump, out string tool);
     }
 }

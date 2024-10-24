@@ -98,7 +98,7 @@ namespace BetterBombs
                                 objectsToDrop[clump].Add(ItemRegistry.Create("(O)709", clump.parentSheetIndex.Value == ResourceClump.stumpIndex ? 2 : 8));
                             }
                             // green rain weeds
-                            else if (vanillaWeedsClumps.Contains(clump.parentSheetIndex.Value) && Config.BreakWeedsClumps)
+                            else if (clump.IsGreenRainBush() && Config.BreakWeedsClumps)
                             {
                                 // green rain weeds drop 2-3 moss, 2-3 fiber, and a 5% chance of a mossy seed
                                 if (!objectsToDrop.ContainsKey(clump)) objectsToDrop.Add(clump, new());
