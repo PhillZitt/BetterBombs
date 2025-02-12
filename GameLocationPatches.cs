@@ -135,27 +135,8 @@ namespace BetterBombs
                                         "Other" => Config.BreakOtherClumps,
                                         _ => false
                                     };
-                                    if (!canBreak) continue;
-
-                                    // retrieve and parse drops
-                                    // Dictionary<string qualifiedItemId, (double chance, int prerolledCount)>
-                                    var drops = itemExtensionsApi.GetClumpDrops(clump, true);
-
-                                    // Get ready to collect the drops, intializing an empty list so the clump gets destroyed
-                                    if (!objectsToDrop.ContainsKey(clump)) objectsToDrop.Add(clump, new());
-
-                                    // If the clump doesn't drop anything, don't try to iterate through an empty dictionary
-                                    if (!drops.Any()) continue;
-
-                                    foreach (var item in drops)
-                                    {
-                                        // Item1 is the chance for dropping
-                                        if (item.Value.Item1 == 1 || Game1.random.NextBool(item.Value.Item1))
-                                        {
-                                            // made even simpler thanks to the drop count being rolled for us
-                                            objectsToDrop[clump].Add(ItemRegistry.Create(item.Key, item.Value.Item2));
-                                        }
-                                    }
+                                    // ItemExtensions now handles drop parsing and spawning internally, we just have to say which one to do it for and to remove it as well
+                                    if (canBreak) itemExtensionsApi.CheckClumpDrops(clump, true);
                                 }
                             } // else other mod
                         }
