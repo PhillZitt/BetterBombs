@@ -1,7 +1,7 @@
 ﻿{
     "Name": "BetterBombs",
     "Author": "Duno666, justastranger",
-    "Version": "1.2.1",
+    "Version": "1.2.2",
     "Description": "Making explosions just a little better. Inspired by UsefulBombs",
     "UniqueID": "Duno666.BetterBombs",
     "EntryDll": "BetterBombs.dll",
@@ -10,7 +10,7 @@
     "Dependencies": [
         {
             "UniqueID": "mistyspring.ItemExtensions",
-            "MinimumVersion": "1.6",
+            "MinimumVersion": "1.12.3",
             "IsRequired": false
         },
         {
