@@ -67,20 +67,18 @@ namespace BetterBombs
         List<string> GetCustomSeeds(string itemId, bool includeSource, bool parseConditions = true);
 
         /// <summary>
-        /// Gets drops for a clump.
+        /// Does checks for a clump's drops, including monster spawning and other behavior.
         /// </summary>
         /// <param name="clump">The clump instance.</param>
-        /// <param name="parseConditions">Whether to pase GSQs before adding to list.</param>
-        /// <returns>All possible drops, with %.</returns>
-        Dictionary<string, (double, int)> GetClumpDrops(ResourceClump clump, bool parseConditions = false);
+        /// <param name="remove">whether to remove the clump from the map.</param>
+        void CheckClumpDrops(ResourceClump clump, bool remove = false);
 
         /// <summary>
-        /// Gets drops for a node.
+        /// Does checks for a node's drops, including monster spawning and other behavior.
         /// </summary>
         /// <param name="node">The node instance.</param>
-        /// <param name="parseConditions">Whether to pase GSQs before adding to list.</param>
-        /// <returns>All possible drops, with %.</returns>
-        Dictionary<string, (double, int)> GetObjectDrops(StardewValley.Object node, bool parseConditions = false);
+        /// <param name="remove">whether to remove the node from the map.</param>
+        void CheckObjectDrops(StardewValley.Object node, bool remove = false);
 
         bool GetResourceData(string id, bool isClump, out object data);
         bool GetBreakingTool(string id, bool isClump, out string tool);
