@@ -6,6 +6,11 @@ namespace BetterBombs
     /// <summary>The mod entry point.</summary>
     public class ModEntry : Mod
     {
+        internal static ITranslationHelper i18n { get; private set; }
+        internal static ModConfig Config { get; private set; }
+
+        internal static IItemExtensionsApi ItemExtensionsApi { get; private set; }
+
         /*********
         ** Public methods
         *********/
@@ -13,14 +18,14 @@ namespace BetterBombs
         /// <param name="helper">Provides simplified APIs for writing mods.</param>
         public override void Entry(IModHelper helper)
         {
-            var config = Helper.ReadConfig<ModConfig>();
+            Config = Helper.ReadConfig<ModConfig>();
+            i18n = Helper.Translation;
 
-            GameLocationPatches.Initialize(Monitor, config, helper);
-            ObjectPatches.Initialize(Monitor, config);
+            GameLocationPatches.Initialize(Monitor);
+            ObjectPatches.Initialize(Monitor);
 
             //I considered trying to do this without harmony patching, but this results in a significantly reduced code footprint
             //If anyone has an idea of how to do this without harmony, shoot me a pull request
-            //var harmony = HarmonyInstance.Create(this.ModManifest.UniqueID);
             var harmony = new Harmony(ModManifest.UniqueID);
 
             harmony.Patch(
@@ -33,6 +38,12 @@ namespace BetterBombs
             );
 
             helper.Events.GameLoop.GameLaunched += (sender, args) => { 
+
+                if (helper.ModRegistry.IsLoaded("mistyspring.ItemExtensions"))
+                {
+                    ItemExtensionsApi = helper.ModRegistry.GetApi<IItemExtensionsApi>("mistyspring.ItemExtensions");
+                }
+
                 if (helper.ModRegistry.IsLoaded("spacechase0.GenericModConfigMenu"))
                 {
                     var gmcmApi = helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");

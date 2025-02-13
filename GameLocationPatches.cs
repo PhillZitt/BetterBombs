@@ -13,10 +13,7 @@ namespace BetterBombs
     public class GameLocationPatches
     {
         private static IMonitor Monitor;
-        private static ModConfig Config;
-        private static IModHelper Helper;
         private const string itemExtensionsModDataKey = "mistyspring.ItemExtensions/CustomClumpId";
-        private static IItemExtensionsApi itemExtensionsApi;
 
         private const string new16TileSheetName = "TileSheets\\Objects_2";
         private const int new16Boulder = 148;
@@ -27,18 +24,9 @@ namespace BetterBombs
         private readonly static List<int> vanillaWeedsClumps = new() { greenRainWeedClump1, greenRainWeedClump2 };
 
         // call this method from your Entry class
-        public static void Initialize(IMonitor monitor, ModConfig config, IModHelper helper)
+        public static void Initialize(IMonitor monitor)
         {
             Monitor = monitor;
-            Config = config;
-            Helper = helper;
-
-            Helper.Events.GameLoop.GameLaunched += (sender, args) =>
-            {
-                // if IE isn't loaded there's no point in trying to access their API
-                if (!helper.ModRegistry.IsLoaded("mistyspring.ItemExtensions")) return;
-                itemExtensionsApi = helper.ModRegistry.GetApi<IItemExtensionsApi>("mistyspring.ItemExtensions");
-            };
         }
 
         //Pull in anything that I might change as ref, because the default code will run after this
@@ -50,19 +38,19 @@ namespace BetterBombs
             try
             {
                 //Do all of the changes early, if the custom method explodes, at least we did some of the changes
-                damageFarmers = Config.DamageFarmers;
-                radius = Convert.ToInt32(radius * Config.Radius);
+                damageFarmers = ModEntry.Config.DamageFarmers;
+                radius = Convert.ToInt32(radius * ModEntry.Config.Radius);
                 if (damage_amount > 0)
                 {
-                    damage_amount = Convert.ToInt32(damage_amount * Config.Damage);
+                    damage_amount = Convert.ToInt32(damage_amount * ModEntry.Config.Damage);
                 }
                 else
                 {
-                    damage_amount = Convert.ToInt32((radius * Game1.random.Next(radius * 6, (radius * 8) + 1)) * Config.Damage);
+                    damage_amount = Convert.ToInt32((radius * Game1.random.Next(radius * 6, (radius * 8) + 1)) * ModEntry.Config.Damage);
                 }
 
                 var tileArea = new Rectangle(Convert.ToInt32(tileLocation.X - radius - 1f), Convert.ToInt32(tileLocation.Y - radius - 1f), (radius * 2 + 1), (radius * 2 + 1));
-                if (Config.BreakClumps)
+                if (ModEntry.Config.BreakClumps)
                 {
                     Dictionary<ResourceClump, List<Item>> objectsToDrop = new();
                     foreach (ResourceClump clump in __instance.resourceClumps)
@@ -72,14 +60,14 @@ namespace BetterBombs
                         if (clump.textureName.Value == null || clump.textureName.Value == new16TileSheetName)
                         {
                             // stone
-                            if (vanillaStoneClumps.Contains(clump.parentSheetIndex.Value) && Config.BreakStoneClumps)
+                            if (vanillaStoneClumps.Contains(clump.parentSheetIndex.Value) && ModEntry.Config.BreakStoneClumps)
                             {
                                 // vanilla boulders always drop stone, amounts taken from original author's version of this portion
                                 if (!objectsToDrop.ContainsKey(clump)) objectsToDrop.Add(clump, new());
                                 objectsToDrop[clump].Add(ItemRegistry.Create(StardewValley.Object.stoneQID, clump.parentSheetIndex.Value == ResourceClump.boulderIndex ? 15 : 10));
                             }
                             // meteorite
-                            else if (clump.parentSheetIndex.Value == ResourceClump.meteoriteIndex && Config.BreakStoneClumps)
+                            else if (clump.parentSheetIndex.Value == ResourceClump.meteoriteIndex && ModEntry.Config.BreakStoneClumps)
                             {
                                 // According to the wiki: They drop 6 Iridium Ore, 6 Stone, and 2 Geodes, and have a 25% chance to drop a Prismatic Shard. 
                                 // if BetterMeteorites is installed, the simple act of removing the meteorite causes it to spawn extra resources so special compat is unnecessary
@@ -90,7 +78,7 @@ namespace BetterBombs
                                 if (Game1.random.NextBool(0.25f)) objectsToDrop[clump].Add(ItemRegistry.Create(StardewValley.Object.prismaticShardQID));
                             }
                             // wood
-                            else if (vanillaWoodClumps.Contains(clump.parentSheetIndex.Value) && Config.BreakWoodClumps)
+                            else if (vanillaWoodClumps.Contains(clump.parentSheetIndex.Value) && ModEntry.Config.BreakWoodClumps)
                             {
                                 // vanilla stumps and logs drop hardwood, (O)709
                                 // stumps drop a base of 2, hollow logs drop 8
@@ -98,7 +86,7 @@ namespace BetterBombs
                                 objectsToDrop[clump].Add(ItemRegistry.Create("(O)709", clump.parentSheetIndex.Value == ResourceClump.stumpIndex ? 2 : 8));
                             }
                             // green rain weeds
-                            else if (clump.IsGreenRainBush() && Config.BreakWeedsClumps)
+                            else if (clump.IsGreenRainBush() && ModEntry.Config.BreakWeedsClumps)
                             {
                                 // green rain weeds drop 2-3 moss, 2-3 fiber, and a 5% chance of a mossy seed
                                 if (!objectsToDrop.ContainsKey(clump)) objectsToDrop.Add(clump, new());
@@ -115,13 +103,13 @@ namespace BetterBombs
                                 // Something's hinky if we have ResourceClumps with IE's ModData but no API access so we'll play it safe and skip over it
                                 // Should cover cases where someone removes ItemExtensions after clumps spawn without removing them somehow
                                 // Otherwise just checking for the presence of the relevant ModData should be enough
-                                if (itemExtensionsApi == null) continue;
+                                if (ModEntry.ItemExtensionsApi == null) continue;
 
                                 // Grab the info we need to check if the clump is eligible for blowing up
                                 // If the clump ID isn't valid it'll skip trying to parse it further
                                 // Should probably log invalid custom clump IDs if they're encountered but that's the content pack author's ballpark
                                 // There's a legitimate reason to be sketched out by the use of dynamic but it's the only way to properly utilize an Object without upcasting to a type we can't reference without an assembly reference
-                                if (itemExtensionsApi.GetResourceData(clumpId, true, out dynamic clumpData))
+                                if (ModEntry.ItemExtensionsApi.GetResourceData(clumpId, true, out dynamic clumpData))
                                 {
                                     // If there are any issues with a dynamic ResourceData cast as an Object it'll be here
                                     // boomy no worky :'(
@@ -129,14 +117,14 @@ namespace BetterBombs
                                     // skip any clumps that aren't configured to be broken
                                     bool canBreak = clumpData.Type.ToString() switch
                                     {
-                                        "Stone" => Config.BreakStoneClumps,
-                                        "Wood" => Config.BreakWoodClumps,
-                                        "Weeds" => Config.BreakWeedsClumps,
-                                        "Other" => Config.BreakOtherClumps,
+                                        "Stone" => ModEntry.Config.BreakStoneClumps,
+                                        "Wood" => ModEntry.Config.BreakWoodClumps,
+                                        "Weeds" => ModEntry.Config.BreakWeedsClumps,
+                                        "Other" => ModEntry.Config.BreakOtherClumps,
                                         _ => false
                                     };
                                     // ItemExtensions now handles drop parsing and spawning internally, we just have to say which one to do it for and to remove it as well
-                                    if (canBreak) itemExtensionsApi.CheckClumpDrops(clump, true);
+                                    if (canBreak) ModEntry.ItemExtensionsApi.CheckClumpDrops(clump, true);
                                 }
                             } // else other mod
                         }
