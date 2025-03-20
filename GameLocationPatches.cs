@@ -46,7 +46,7 @@ namespace BetterBombs
                 }
                 else
                 {
-                    damage_amount = Convert.ToInt32((radius * Game1.random.Next(radius * 6, (radius * 8) + 1)) * ModEntry.Config.Damage);
+                    damage_amount = Convert.ToInt32(Game1.random.Next(radius * 6, (radius * 8) + 1) * ModEntry.Config.Damage);
                 }
 
                 var tileArea = new Rectangle(Convert.ToInt32(tileLocation.X - radius - 1f), Convert.ToInt32(tileLocation.Y - radius - 1f), (radius * 2 + 1), (radius * 2 + 1));
