@@ -202,4 +202,17 @@ These are the available settings:
     <td>
     </td>
   </tr>
+  <tr>
+    <td>
+      <code>TillDirt</code>
+    </td>
+    <td>
+      A toggle for whether explosions will till soil like a hoe.
+    </td>
+    <td>
+      <code>true</code>
+    </td>
+    <td>
+    </td>
+  </tr>
 </table>
