@@ -7,6 +7,8 @@ using StardewValley.TerrainFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace BetterBombs
 {
@@ -27,6 +29,32 @@ namespace BetterBombs
         public static void Initialize(IMonitor monitor)
         {
             Monitor = monitor;
+        }
+
+        public static bool makeHoeDirtDetour(GameLocation location, Vector2 vector2, bool ignoreChecks = false)
+        {
+            if (ModEntry.Config.TillDirt) return location.makeHoeDirt(vector2, ignoreChecks);
+            else return false;
+        }
+
+        [HarmonyPatch(typeof(GameLocation), nameof(GameLocation.explode))]
+        [HarmonyTranspiler]
+        public static IEnumerable<CodeInstruction> Explode_Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            CodeMatcher matcher = new CodeMatcher(instructions);
+            CodeMatch callToMakeHoeDirt = new(OpCodes.Call, AccessTools.Method(typeof(GameLocation), "makeHoeDirt"));
+            // have to do this twice to catch both calls
+            // there's a repeat method but this should be a tiny bit more debuggable
+            // All we're doing is forcing a quick detour from this transpiled method in order to avoid patching makeHoeDirt, which would be messy and lack context on whether it's being called from an explosion
+            matcher.MatchStartForward(callToMakeHoeDirt)
+                .ThrowIfNotMatchForward("Call to makeHoeDirt not found!", callToMakeHoeDirt)
+                .SetOperandAndAdvance(typeof(GameLocationPatches).GetMethod(nameof(makeHoeDirtDetour), BindingFlags.Static | BindingFlags.Public));
+
+            matcher.MatchStartForward(callToMakeHoeDirt)
+                .ThrowIfNotMatchForward("Second call to makeHoeDirt not found!", callToMakeHoeDirt)
+                .SetOperandAndAdvance(typeof(GameLocationPatches).GetMethod(nameof(makeHoeDirtDetour), BindingFlags.Static | BindingFlags.Public));
+
+            return matcher.Instructions();
         }
 
         //Pull in anything that I might change as ref, because the default code will run after this

@@ -30,14 +30,16 @@ namespace BetterBombs
 
             harmony.Patch(
                 original: AccessTools.Method(typeof(StardewValley.GameLocation), nameof(StardewValley.GameLocation.explode)),
-                prefix: new HarmonyMethod(typeof(GameLocationPatches), nameof(GameLocationPatches.Explode_Prefix))
+                prefix: new HarmonyMethod(typeof(GameLocationPatches), nameof(GameLocationPatches.Explode_Prefix)),
+                transpiler: new HarmonyMethod(typeof(GameLocationPatches), nameof(GameLocationPatches.Explode_Transpiler))
             );
             harmony.Patch(
                 original: AccessTools.Method(typeof(StardewValley.Object), nameof(StardewValley.Object.onExplosion)),
                 prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.onExplosion_Prefix))
             );
 
-            helper.Events.GameLoop.GameLaunched += (sender, args) => {
+            helper.Events.GameLoop.GameLaunched += (sender, args) =>
+            {
 
                 if (helper.ModRegistry.IsLoaded("mistyspring.ItemExtensions"))
                 {
@@ -62,6 +64,7 @@ namespace BetterBombs
                     gmcmApi?.AddBoolOption(ModManifest, () => Config.CollectFish, (collectFish) => Config.CollectFish = collectFish, () => i18n.Get("CollectFish.name"), () => i18n.Get("CollectFish.description"));
                     gmcmApi?.AddBoolOption(ModManifest, () => Config.CollectedQuality, (collectedQuality) => Config.CollectedQuality = collectedQuality, () => i18n.Get("CollectedQuality.name"), () => i18n.Get("CollectedQuality.description"));
                     gmcmApi?.AddBoolOption(ModManifest, () => Config.CollectedDegrade, (collectedDegrade) => Config.CollectedDegrade = collectedDegrade, () => i18n.Get("CollectedDegrade.name"), () => i18n.Get("CollectedDegrade.description"));
+                    gmcmApi?.AddBoolOption(ModManifest, () => Config.TillDirt, (tillDirt) => Config.TillDirt = tillDirt, () => i18n.Get("TillDirt.name"), () => i18n.Get("TillDirt.description"));
                 }
             };
         }

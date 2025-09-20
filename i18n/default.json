@@ -24,5 +24,7 @@
     "CollectedQuality.name": "Collected Items Have Quality",
     "CollectedQuality.description": "Toggles whether collecting forage or fish with bombs will give it a quality level. Enabled by default.",
     "CollectedDegrade.name": "Degrade Collected Items",
-    "CollectedDegrade.description": "Toggles whether quality levels are reduced by one when collecting items via explosion. Disabled by default."
+    "CollectedDegrade.description": "Toggles whether quality levels are reduced by one when collecting items via explosion. Disabled by default.",
+    "TillDirt.name": "Till Exploded Dirt",
+    "TillDirt.description":  "Toggles whether dirt is tilled by an explosion."
 }
