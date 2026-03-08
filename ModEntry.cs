@@ -37,6 +37,10 @@ namespace BetterBombs
                 original: AccessTools.Method(typeof(StardewValley.Object), nameof(StardewValley.Object.onExplosion)),
                 prefix: new HarmonyMethod(typeof(ObjectPatches), nameof(ObjectPatches.onExplosion_Prefix))
             );
+            harmony.Patch(
+                original: AccessTools.Method(typeof(StardewValley.TemporaryAnimatedSprite), nameof(StardewValley.TemporaryAnimatedSprite.update)),
+                transpiler: new HarmonyMethod(typeof(TemporaryAnimatedSpritePatches), nameof(TemporaryAnimatedSpritePatches.Update_Transpiler))
+            );
 
             helper.Events.GameLoop.GameLaunched += (sender, args) =>
             {
@@ -65,6 +69,7 @@ namespace BetterBombs
                     gmcmApi?.AddBoolOption(ModManifest, () => Config.CollectedQuality, (collectedQuality) => Config.CollectedQuality = collectedQuality, () => i18n.Get("CollectedQuality.name"), () => i18n.Get("CollectedQuality.description"));
                     gmcmApi?.AddBoolOption(ModManifest, () => Config.CollectedDegrade, (collectedDegrade) => Config.CollectedDegrade = collectedDegrade, () => i18n.Get("CollectedDegrade.name"), () => i18n.Get("CollectedDegrade.description"));
                     gmcmApi?.AddBoolOption(ModManifest, () => Config.TillDirt, (tillDirt) => Config.TillDirt = tillDirt, () => i18n.Get("TillDirt.name"), () => i18n.Get("TillDirt.description"));
+                    gmcmApi?.AddBoolOption(ModManifest, () => Config.FlashScreen, (flashScreen) => Config.FlashScreen = flashScreen, () => i18n.Get("FlashScreen.name"), () => i18n.Get("FlashScreen.description"));
                 }
             };
         }

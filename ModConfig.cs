@@ -16,5 +16,6 @@
         public bool CollectedDegrade { get; set; } = false;
         public bool CollectedQuality { get; set; } = true;
         public bool TillDirt { get; set; } = true;
+        public bool FlashScreen { get; set; } = true;
     }
 }
