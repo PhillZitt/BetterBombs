@@ -215,4 +215,17 @@ These are the available settings:
     <td>
     </td>
   </tr>
+  <tr>
+    <td>
+      <code>FlashScreen</code>
+    </td>
+    <td>
+      Toggles whether the screen flashes when an explosion occurs.
+    </td>
+    <td>
+      <code>true</code>
+    </td>
+    <td>
+    </td>
+  </tr>
 </table>
