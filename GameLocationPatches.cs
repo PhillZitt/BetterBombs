@@ -62,11 +62,11 @@ namespace BetterBombs
         [HarmonyPrefix]
         public static bool Explode_Prefix(GameLocation __instance, Vector2 tileLocation, ref int radius, Farmer who, ref bool damageFarmers, ref int damage_amount)
         {
-            Monitor.Log("Beginning Explosion");
             try
             {
                 //Do all of the changes early, if the custom method explodes, at least we did some of the changes
-                damageFarmers = ModEntry.Config.DamageFarmers;
+                // only true to modify damageFarmers if it isn't already overriden (napalm ring)
+                if (damageFarmers) damageFarmers = ModEntry.Config.DamageFarmers;
                 radius = Convert.ToInt32(radius * ModEntry.Config.Radius);
                 if (damage_amount > 0)
                 {

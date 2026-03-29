@@ -1,7 +1,7 @@
 ﻿{
     "Name": "BetterBombs",
     "Author": "Duno666, justastranger",
-    "Version": "1.4.0",
+    "Version": "1.4.1",
     "Description": "Making explosions just a little better. Inspired by UsefulBombs",
     "UniqueID": "Duno666.BetterBombs",
     "EntryDll": "BetterBombs.dll",
