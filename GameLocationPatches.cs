@@ -157,7 +157,7 @@ namespace BetterBombs
                             } // else other mod
                         }
                     }
-                    // spawn drops and remove clumps at the same time
+                    // spawn drops
                     foreach (KeyValuePair<ResourceClump, List<Item>> clumpAndList in objectsToDrop)
                     {
                         // first, double-check for and iterate through all of the items to spawn
@@ -169,11 +169,9 @@ namespace BetterBombs
                                 Game1.createMultipleObjectDebris(item.QualifiedItemId, (int)clumpAndList.Key.Tile.X, (int)clumpAndList.Key.Tile.Y, item.Stack);
                             }
                         }
-                        // remove the associated resource clump
-                        // I *would* worry about the lack of sanity check if using the clump as the Dictionary key didn't guarantee that they'd be unique
-                        // Perform the removal outside the check above so that clumps without drops get destroyed too
-                        __instance.resourceClumps.Remove(clumpAndList.Key);
                     }
+                    // remove the associated resource clumps after foreach since it's somehow triggering a collection modification and subsequent InvalidOperationException
+                    __instance.resourceClumps.RemoveWhere(clump => objectsToDrop.ContainsKey(clump));
                 }
             }
             catch (Exception ex)
