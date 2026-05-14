@@ -81,7 +81,7 @@ namespace BetterBombs
                 if (ModEntry.Config.BreakClumps)
                 {
                     Dictionary<ResourceClump, List<Item>> objectsToDrop = new();
-                    foreach (ResourceClump clump in __instance.resourceClumps)
+                    foreach (ResourceClump clump in __instance.resourceClumps.ToArray())
                     {
                         if (!tileArea.Contains(clump.Tile)) continue;
                         // vanilla resource clump
@@ -163,7 +163,7 @@ namespace BetterBombs
                         // first, double-check for and iterate through all of the items to spawn
                         if (clumpAndList.Value != null && clumpAndList.Value.Any())
                         {
-                            foreach (Item item in clumpAndList.Value)
+                            foreach (Item item in clumpAndList.Value.ToArray())
                             {
                                 // We used the Item stack as a container for the two bits of info we actually needed, QualifiedItemId and Stack size, in order to spawn the Objects as dropped items
                                 Game1.createMultipleObjectDebris(item.QualifiedItemId, (int)clumpAndList.Key.Tile.X, (int)clumpAndList.Key.Tile.Y, item.Stack);
